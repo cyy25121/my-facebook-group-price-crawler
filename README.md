@@ -1,6 +1,6 @@
 # Facebook 社團遊戲片價格爬蟲
 
-爬取指定 Facebook 社團一個月內的貼文,解析 PS4/PS5(及 Switch)遊戲片售價,
+爬取指定 Facebook 社團近期(預設 7 天)的貼文,解析 PS4/PS5(及 Switch)遊戲片售價,
 追蹤同一遊戲的行情變化,並保存每篇貼文當下的內容快照(可偵測後續編輯改價)。
 
 ## 架構
@@ -10,7 +10,8 @@
 | `crawler.py` | Playwright 開啟獨立 profile 的 Chrome,攔截 Facebook GraphQL 回應,取得貼文 post_id / 精確發文時間 / 全文,append 到 `data/posts.jsonl` |
 | `analyze.py` | 解析快照 → 抽出 (遊戲, 價格) → 輸出 `data/listings.csv`、`data/report.xlsx` |
 | `games.py` | 遊戲名稱別名字典(可自行擴充)+ 非價格脈絡關鍵字 |
-| `config.json` | 社團清單、爬取天數(預設 30)、捲動上限 |
+| `config.json` | 社團清單、爬取天數(預設 7)、捲動上限 |
+| `run_weekly.sh` | 排程進入點:先跑 crawler.py,成功後跑 analyze.py |
 
 ## 使用
 
@@ -25,6 +26,14 @@ python3 -m venv .venv && .venv/bin/pip install playwright openpyxl && .venv/bin/
 # 分析
 .venv/bin/python analyze.py
 ```
+
+## 定期執行
+
+`run_weekly.sh`(爬取 + 分析)已註冊為 macOS LaunchAgent,每週一 10:00 自動執行:
+
+- plist:`~/Library/LaunchAgents/com.yychang.fb-price-crawler.plist`(log 寫到 `logs/`)
+- 立即手動觸發:`launchctl kickstart gui/$(id -u)/com.yychang.fb-price-crawler`
+- 移除排程:`launchctl bootout gui/$(id -u)/com.yychang.fb-price-crawler`
 
 ## 資料設計
 

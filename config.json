@@ -3,7 +3,7 @@
     { "id": "606832889422935", "name": "PS5.Switch.XBOX.PS4二手遊戲主機.軟體.周邊販賣區" },
     { "id": "buyswitchandps", "name": "buyswitchandps 二手遊戲買賣" }
   ],
-  "days": 30,
+  "days": 7,
   "max_rounds": 600,
   "stall_rounds_limit": 40,
   "headless": false
